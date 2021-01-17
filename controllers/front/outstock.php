@@ -41,9 +41,11 @@ class OutofstockOutstockModuleFrontController extends ProductListingFrontControl
      */
     public function initContent()
     {
-        parent::initContent();       
+
+        parent::initContent();
+        $template ='../../../modules/outofstock/views/templates/product-list.tpl';
             $this->doProductSearch(
-                'catalog/listing/product-list',
+                $template,
                 [   
                 ]
             );
@@ -132,8 +134,6 @@ class OutofstockOutstockModuleFrontController extends ProductListingFrontControl
         if(empty($backList))
             return false;
 
-
-
          
         if (!empty($backList)) {
             $assembler = new ProductAssembler($this->context);
@@ -155,6 +155,9 @@ class OutofstockOutstockModuleFrontController extends ProductListingFrontControl
             if (is_array($backList)) {
                 foreach ($backList as $productId) {
                     $productObject=new Product((int)$productId['id_product']);
+                    if($productObject->active==0){
+                        continue;
+                    }
 
                 	   $product = (new ProductAssembler($this->context))
             ->assembleProduct(array('id_product' => $productId['id_product'],'id_product_attribute' => $productId['id_product_attribute']));
